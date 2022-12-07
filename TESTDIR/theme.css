@@ -1,0 +1,49 @@
+table{
+  border-style: dotted;
+  height: auto;
+  text-align: center;
+  font-family: Verdana;
+  align: center;
+  margin: 0px;
+}
+
+img {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+p {
+  display: inline;
+  margin-left: auto;
+  margin-right: auto;
+  vertical-align: middle;
+}
+
+tr:nth-child(even) {
+  background-color: #b3d8ff;
+}
+tr:nth-child(odd) {
+  background-color: #82bfff;
+}
+
+tr {
+  border-collapse: separate;
+  border-spacing: 20px;
+}
+
+table:nth-child(even) {
+  float: left;
+}
+
+.data, #bernard, #patrick {
+  width: 100%;
+}
+
+.weather {
+  width: 50%;
+  height: auto;
+}
+
+#desc {
+  font-weight: normal;
+}

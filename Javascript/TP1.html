@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <link href="../image/LogoSN" rel="icon" type="image/png"/>
+    <link rel="stylesheet" href="../fichier_css/javascript.css" type="text/css">
+    <script type="text/javascript" src="TP1.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin="" />
+    <style type="text/css">
+        #map{
+            height:400px;
+        }
+    </style>
+    <title>BTS SN - PHP 3</title>
+    <style>
+        #number {
+        width: 4em;
+        }
+
+    </style>
+  </head>
+  <body>
+    <div id="page-container">
+    <!-- Header -->
+    <header>
+        <img src="../image/LogoSN" widht"200px" height="100px" align=right onmouseover="this.src='../image/logo_CubeSA';" onmouseout="this.src='../image/LogoSN';">
+        <img src="../image/logo_CubeSA" widht"200px" height="100px" align=left>
+        <h1 id="titre" onclick="changetitre()">Bienvenue</h1>
+
+
+        <script type="text/javascript" >
+          window.onload = alertes();
+          window.onload = changements();
+        </script>
+    </header>
+
+    <div style="max-width:930px">
+      <button onclick="changecolor1()">Change couleur fond</button>
+      <button onclick="changecolor2()">Couleur fond base</button>
+      <button onclick="affichepos()">Position carré</button>
+      <button onclick="bougecarre()">Bouger le carré</button>
+      <button onclick="initialcarre()">Remettre le carré</button>
+      <form>
+        <input id="boite_intervalle" type="number" step="50" value="2500" min="0" max="5000" onclick="resetintervalle()">
+        <input type="button" value="Appliquer intervalle" onclick="intervalle()">
+      </form>
+    </div>
+
+    <div id="carre">l</div>
+    <!-- section -->
+    <section id="main">
+
+      <p><b>MAGAUD S. / PINATEL G.</b><br/></p>
+      <span id="date_heure"></span>
+      <script type="text/javascript">
+      window.onload = date_heure('date_heure');
+      window.onload = getinit();
+      </script>
+
+      <p id="pos">Appuyez sur le bouton pour savoir les coordonnées du carré</p>
+
+      <div id="map">
+  	    <!-- Ici s'affichera la carte -->
+  	  </div>
+        <!-- Ici s'affichera la météo -->
+      <p id="demo"></p>
+
+      <script>
+      var obj, dbParam, xmlhttp, myObj, x, txt = "";
+      obj = {};
+      dbParam = JSON.stringify(obj);
+      xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          myObj = JSON.parse(this.responseText);
+          txt += "<table border='1' style='background-color:#4287f5; font-weight:bold'>"
+          txt += "<tr><td> Nom : </td><td>" + myObj.name + "</td></tr>";
+          txt += "<tr><td> Température : </td><td>" + myObj.main.temp + "°C</td></tr>";
+          txt += "<tr><td> Description : </td><td>" + myObj.weather[0].description + "<img src='http://openweathermap.org/img/wn/" + myObj.weather[0].icon +".png'></td></tr>";
+          txt += "<tr><td> Longitude : </td><td>" + myObj.coord.lon + "</td></tr>";
+          txt += "<tr><td> Lattitude : </td><td>" + myObj.coord.lat + "</td></tr>";
+          txt += "</table>"
+          document.getElementById("demo").innerHTML = txt;
+        }
+      };
+      xmlhttp.open("POST", "http://api.openweathermap.org/data/2.5/weather?id=3006767&APPID=2b02f55ef811f696afbe0023854dabcb&units=metric&lang=fr", true);
+      xmlhttp.send("x=" + dbParam);
+      </script>
+    </section>
+
+
+
+    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" crossorigin=""></script>
+	<script type="text/javascript">
+            // On initialise la latitude et la longitude de Paris (centre de la carte)
+            var lat = 46.6667;
+            var lon = -1.4333;
+            var macarte = null;
+
+            // Nous initialisons une liste de marqueurs
+            var villes = {
+            	"Paris": { "lat": 48.852969, "lon": 2.349903 },
+            	"Brest": { "lat": 48.383, "lon": -4.500 },
+            	"Quimper": { "lat": 48.000, "lon": -4.100 },
+            	"Bayonne": { "lat": 43.500, "lon": -1.467 },
+              "La Roche-sur-Yon": { "lat":46.6667, "lon": -1.4333 },
+              "Chez Steven": {"lat": 46.4607665410732, "lon": -1.61314323502597 }
+            };
+            // Fonction d'initialisation de la carte
+            function initMap() {
+                // Créer l'objet "macarte" et l'insèrer dans l'élément HTML qui a l'ID "map"
+                macarte = L.map('map').setView([lat, lon], 11);
+                // Leaflet ne récupère pas les cartes (tiles) sur un serveur par défaut. Nous devons lui préciser où nous souhaitons les récupérer. Ici, openstreetmap.fr
+                L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+                    // Il est toujours bien de laisser le lien vers la source des données
+                    attribution: 'données © <a href="//osm.org/copyright">OpenStreetMap</a>/ODbL - rendu <a href="//openstreetmap.fr">OSM France</a>',
+                    minZoom: 1,
+                    maxZoom: 20
+                }).addTo(macarte);
+              	// Nous parcourons la liste des villes
+              	for (ville in villes) {
+              		var marker = L.marker([villes[ville].lat, villes[ville].lon]).addTo(macarte);
+                  marker.bindPopup(ville);
+              	}
+            }
+            window.onload = function(){
+        		// Fonction d'initialisation qui s'exécute lorsque le DOM est chargé
+        		initMap();
+            };
+        </script>
+
+      </div>
+
+     <!-- footer -->
+     <footer id="mentions">
+        <nav>
+            <ul>
+                <li><img src="../image/retour.png" height="20px"><a href="../index.php" style="color:#fff;">Retour à la page d'accueil </a></li>
+            </ul>
+        </nav>
+     </footer>
+
+
+
+  </body>
+</html>

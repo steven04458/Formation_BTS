@@ -1,0 +1,13 @@
+iframe {
+  border: 2px solid #ccc;
+  height: 100%;
+  width: 100%;
+}
+
+table {
+  top: 0px;
+  bottom: 0px;
+  height: 100%;
+  position: absolute;
+  width: 99%;
+}

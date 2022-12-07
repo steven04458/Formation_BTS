@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LRSY</title>
+  <link rel="stylesheet" type="text/css" href="theme.css">
+  <meta charset="UTF-8">
+</head>
+<body>
+<form>
+    <input type="text" id="bernard" required onkeyup='saveValue(this);'>
+</form>
+<br>
+<p id="demo"></p>
+<script>
+document.getElementById("bernard").value = getSavedValue("bernard");
+function saveValue(e){
+    var id = e.id;
+    var val = e.value;
+    localStorage.setItem(id, val);
+}
+function getSavedValue(v){
+    if (!localStorage.getItem(v)) {
+        return "";
+    }
+    return localStorage.getItem(v);
+}
+  var obj, dbParam, xmlhttp, myObj, x, txt = "";
+  obj = {};
+  dbParam = JSON.stringify(obj);
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var sd = new Date();
+      var nextDay = new Date(sd);
+      nextDay.setDate(sd.getDate() + 1);
+      sd.setUTCHours(15);
+      var raw_date = sd.toJSON();
+      var raw_nextDay = nextDay.toJSON();
+      var date = raw_date.slice(0,-14);
+      var nextDay = raw_nextDay.slice(0,-14);
+      var heure = raw_date.slice(11,-8);
+      myObj = JSON.parse(this.responseText);
+      txt += "<table class='data' cellspacing='0' cellpadding='0'>";
+      txt += "<th colspan='2'>" + myObj.city.name + "</th>";
+      txt += "<tr><td> Longitude : </td><td>" + myObj.city.coord.lon + "</td></tr>";
+      txt += "<tr><td> Lattitude : </td><td>" + myObj.city.coord.lat + "</td></tr>";
+      txt += "<tr><td> Date : </td><td>" + date + " "+ heure +"</td></tr>";
+      txt += "</table>"
+      var arr = myObj.list;
+      var raw_date_json;
+      var heure_json;
+      for(let i=0; i<arr.length; i++){
+        raw_date_json = myObj.list[i].dt_txt;
+        date_json = raw_date_json.slice(0,-9);
+        heure_json = raw_date_json.slice(11,-3);
+        txt += "<table class='weather' cellspacing='0' cellpadding='0'>";
+        if(date_json==date){
+          txt += "<th colspan='2'><p>Aujourd\'hui "+ heure_json +"</p><br><img src='http://openweathermap.org/img/wn/"+ myObj.list[i].weather[0].icon +".png'><p id='desc'> | "+ myObj.list[i].weather[0].description +"</p></th>";
+        }
+        else if (date_json==nextDay) {
+          txt += "<th colspan='2'><p>Demain "+ heure_json +"</p><br><img src='http://openweathermap.org/img/wn/"+ myObj.list[i].weather[0].icon +".png'><p id='desc'> | "+ myObj.list[i].weather[0].description +"</p></th>";
+        }
+        else {
+          txt += "<th colspan='2'><p>" + date_json + " "+ heure_json +"</p><br><img src='http://openweathermap.org/img/wn/"+ myObj.list[i].weather[0].icon +".png'><p id='desc'> | "+ myObj.list[i].weather[0].description +"</p></th>";
+        }
+        txt += "<tr><td> Température : </td><td>" + myObj.list[i].main.temp + "°C</td></tr>";
+        txt += "<tr><td> Vitesse du vent: </td><td>" + myObj.list[i].wind.speed + "m/s</td></tr>";
+        txt += "</table>"
+      }
+      document.getElementById("demo").innerHTML = txt;
+    }
+  };
+  xmlhttp.open("POST", "//api.openweathermap.org/data/2.5/forecast?zip="+ document.getElementById("bernard").value +",fr&units=metric&lang=fr&APPID=2b02f55ef811f696afbe0023854dabcb", true);
+  xmlhttp.send("x=" + dbParam);
+</script>
+
+</body>
+</html>
