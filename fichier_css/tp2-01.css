@@ -1,0 +1,33 @@
+article header{
+  border:1px dashed #ccc;
+  padding:1em;
+  background:#ddd;
+}
+
+header {
+  position:relative;
+}
+
+h1{
+  color: #99b92c
+  font-size: 4em;
+  font-weight: normal;
+  text-shadow: 1px 1px 1px #cccccc;
+  background:white;
+  border-bottom:2px dotted #ccc;
+  margin:0;
+  padding:0.8em;;
+}
+h2{
+	color: #D13121;
+	text-decoration: underline;
+}
+/*
+.font {
+	background-color: #BDBDBD;
+}
+*/
+table{
+	background-color: #FFFFFF;
+	border-color: #0F30D2;
+}

@@ -1,0 +1,62 @@
+#mentions {
+	background:#505050;
+	padding:1.3em;
+	border:1px solid #ddd;
+	margin:15em 3em 1em 3em;
+	padding-right: 170px;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+	clear: both;
+  position: relative;
+}
+
+body {
+	font: normal 90%;
+	color: #444;
+	background:#f4f4f4;
+	padding:0 0 2em 0;
+	margin:0;
+}
+
+h1 {
+  text-align: center;
+	font-size: 4em;
+	font-weight: normal;
+	text-shadow: 1px 1px 1px #cccccc;
+	background:white;
+	border-bottom:2px dotted #ccc;
+	margin:0;
+	padding:0.8em;
+}
+
+nav ul li {
+	display:inline-block;
+}
+
+
+ul {
+	margin:0;
+	padding:0;
+}
+
+li {
+	padding-left: 40px;
+}
+
+#main {
+	float:right;
+	width:30%;
+	border:1px dashed #444;
+	margin:1em;
+	padding:1em;
+	background:#fff;
+	position: relative;
+}
+
+#carre {
+	background-color: blue;
+	width: 80px;
+	height: 80px;
+	position: absolute;
+	color: blue;
+}
